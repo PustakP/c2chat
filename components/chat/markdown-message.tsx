@@ -16,8 +16,9 @@ export function MarkdownMessage({ content, className }: Props) {
         remarkPlugins={[remarkGfm]}
         components={{
         // style: code blocks
-        code: ({ node, inline, className, children, ...props }) => {
-          return inline ? (
+        code: ({ node, className, children, ...props }) => {
+          const isInline = node?.tagName !== 'pre';
+          return isInline ? (
             <code className="bg-muted px-1 py-0.5 rounded text-xs font-mono" {...props}>
               {children}
             </code>
