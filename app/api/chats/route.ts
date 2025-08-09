@@ -3,6 +3,7 @@ import { connectMongo } from "@/lib/db";
 import { ChatModel } from "@/lib/models";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 // g: list + create
 export async function GET(req: NextRequest) {
@@ -16,7 +17,7 @@ export async function GET(req: NextRequest) {
     .skip((page - 1) * pageSize)
     .limit(pageSize)
     .lean();
-  return Response.json({ total, page, pageSize, chats });
+  return Response.json({ total, page, pageSize, chats }, { headers: { "Cache-Control": "no-store" } });
 }
 
 export async function POST(req: NextRequest) {

@@ -12,8 +12,8 @@ export default function Home() {
   const router = useRouter();
   const { createChat, sendMessage } = useChatStore();
 
-  const handleFirstMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleFirstMessage = async (e?: React.FormEvent | React.KeyboardEvent) => {
+    e?.preventDefault();
     if (!input.trim() || isLoading) return;
 
     setIsLoading(true);
@@ -39,7 +39,7 @@ export default function Home() {
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleFirstMessage(e as any);
+      handleFirstMessage(e);
     }
   };
 

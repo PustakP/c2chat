@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# c2chat
 
-## Getting Started
+minimalist chat app with persistent conversations
 
-First, run the development server:
+## what it has
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- clean ui for chatting with ai
+- sidebar with chat history and pagination
+- markdown rendering for formatted responses
+- auto-generated chat titles via ai
+- responsive design with mobile support
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## gemini integration
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+uses google gemini 2.5-flash model for ai responses. maintains conversation context by converting stored messages to gemini format (user/model roles). generates chat titles automatically using gemini 1.5-flash when first exchange happens.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## zustand state mgmt
 
-## Learn More
+single store manages all app state - chat list, current messages, input, loading states. handles pagination for chat history. syncs local state with server data. creates/deletes chats and persists messages.
 
-To learn more about Next.js, take a look at the following resources:
+## chat slug generation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+each chat gets unique readable id like "curious-otter-42". combines random adjective + animal + 2-digit number. used as url-friendly identifier and db lookup key.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## mongodb storage
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+stores chat docs with slug, title, messages array, timestamps. message subdocs have role (user/assistant) and content. indexed on slug for fast lookups. uses mongoose schemas with automatic timestamps.

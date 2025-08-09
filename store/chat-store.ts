@@ -25,6 +25,7 @@ type State = {
   page: number;
   pageSize: number;
   total: number;
+  hasLoadedList: boolean;
   // actions
   setInput: (v: string) => void;
   setPage: (v: number) => void;
@@ -57,11 +58,12 @@ export const useChatStore = create<State>((set, get) => ({
   page: 1,
   pageSize: 20,
   total: 0,
+  hasLoadedList: false,
   setInput: (v) => set({ input: v }),
   setPage: async (v) => {
-    set({ page: v });
+    set({ page: v, isLoading: true });
     try {
-      const res = await fetch(`/api/chats?page=${v}&pageSize=${get().pageSize}`);
+      const res = await fetch(`/api/chats?page=${v}&pageSize=${get().pageSize}` as any, { cache: "no-store" });
       const data = await res.json();
       set({
         chats: data.chats.map((d: any) => ({
@@ -73,13 +75,17 @@ export const useChatStore = create<State>((set, get) => ({
           updatedAt: Date.parse(d.updatedAt),
         })),
         total: data.total,
+        hasLoadedList: true,
+        isLoading: false,
       });
-    } catch {}
+    } catch {
+      set({ isLoading: false });
+    }
   },
   setPageSize: async (v) => {
     // fx: update page size based on viewport + refetch if needed (NR)
     const total = get().total;
-    if (v === get().pageSize) return; // sk: avoid noop fetch on identical value
+    if (v === get().pageSize && get().hasLoadedList) return; // sk: avoid noop fetch on identical value after first load
     const maxPage = Math.max(1, Math.ceil((total || 0) / Math.max(1, v)));
     const current = Math.min(get().page || 1, maxPage);
     set({ pageSize: Math.max(1, v) });
