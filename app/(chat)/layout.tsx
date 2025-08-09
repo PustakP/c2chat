@@ -31,7 +31,7 @@ export default function ChatShellLayout({ children }: { children: ReactNode }) {
         <div className="px-4 py-4 border-b flex items-center justify-between shrink-0">
           <div>
             <div className="font-accent text-xl">c2chat</div>
-            <div className="text-xs opacity-70">minimal chat, warm sand</div>
+            <div className="text-xs opacity-70">c2: clean n concise</div>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
